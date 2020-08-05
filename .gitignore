@@ -1,0 +1,25 @@
+# macOS Files
+.DS_Store
+
+# csv Files
+input/**/*.csv
+input/**/*.zip
+input/**/*.xls
+
+# pickle datafile
+*.pkl
+
+# keras model
+*.h5
+
+# word2vec model
+*.w2v
+
+# python enviroment
+env/
+.venv/
+__pycache__/
+
+# VSCode
+.vscode/
+
