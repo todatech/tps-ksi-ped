@@ -8,24 +8,12 @@ from tps import tps
 
 ds = tps.KSIData()
 
-fy = ds.df.groupby(ds.df.DATE.dt.year)['ACCLASS'].value_counts()
+cn = ds.df.groupby('Hood_ID')['ACCNUM'].nunique().sort_values(ascending=False)
+cn2 = pd.DataFrame({'COUNT': cn}).reset_index()
+cn2['HOOD_NAME'] = cn2.Hood_ID.apply(lambda x: ds.get_hood_dict(x))
+cn3 = cn2[:10]
 
-trace1 = go.Bar(
-    name="False",
-    x=fy.unstack().index,
-    y=fy.unstack()[0],
-    offsetgroup=0,
-)
-trace2 = go.Bar(
-    name='True',
-    x=fy.unstack().index,
-    y=fy.unstack()[1],
-    offsetgroup=0,
-    base=fy.unstack()[0],
-)
-
-
-# trace1 = go.Bar(x=ic.INV, y=ic.CNT)
+trace1 = go.Bar(x=cn3.HOOD_NAME, y=cn3.COUNT)
 
 app = dash.Dash()
 app.layout = html.Div(children=[
@@ -33,9 +21,8 @@ app.layout = html.Div(children=[
     html.Div(children='''National Sales Funnel Report.'''),
     dcc.Graph(
         id='example-graph',
-        #barmode='stack',
         figure={
-            'data': [trace1, trace2],
+            'data': [trace1, ],
             'layout':
             go.Layout(title='Order Status by Customer', barmode='stack')
         })

@@ -8,20 +8,17 @@ from tps import tps
 
 ds = tps.KSIData()
 
-fy = ds.df.groupby(ds.df.DATE.dt.year)['ACCLASS'].value_counts()
+ia = ds.df.INVAGE_cc.value_counts().sort_index(ascending=True)
+ia2 = pd.DataFrame({'COUNT': ia}).reset_index()
+ia2['INVAGE_NAME'] = ia.index.map(lambda x: ds.age_list_index[x])
 
 trace1 = go.Bar(
     name="False",
-    x=fy.unstack().index,
-    y=fy.unstack()[0],
+    # x=fy.unstack().index,
+    # y=fy.unstack()[0],
+    x=ia2.INVAGE_NAME,
+    y=ia2.COUNT,
     offsetgroup=0,
-)
-trace2 = go.Bar(
-    name='True',
-    x=fy.unstack().index,
-    y=fy.unstack()[1],
-    offsetgroup=0,
-    base=fy.unstack()[0],
 )
 
 
@@ -33,11 +30,13 @@ app.layout = html.Div(children=[
     html.Div(children='''National Sales Funnel Report.'''),
     dcc.Graph(
         id='example-graph',
-        #barmode='stack',
+        # barmode='stack',
         figure={
-            'data': [trace1, trace2],
+            'data': [trace1, ],
             'layout':
-            go.Layout(title='Order Status by Customer', barmode='stack')
+            go.Layout(title='Order Status by Customer',
+                      # barmode='stack'
+            )
         })
 ])
 

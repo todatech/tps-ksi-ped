@@ -61,6 +61,7 @@ class KSIData:
     '''
     def __init__(self):
         self.df = None
+        self.hood_dict = None
         self.age_list_bagging = age_list_bagging
         self.age_list_index = {value: key for (key, value) in age_list_bagging.items()}
         logger.info('loading csv data...')
@@ -209,13 +210,14 @@ class KSIData:
         # So, now we have unique numbers for the street's identifiers, we can combine their codes by union them together. Since AB = BA (commutative), we will multiple the two integers together.
         self.df['STREET_U'] = self.df['STREET1_cc'].astype(int) * self.df['STREET2_cc'].astype(int)
 
-    def get_hood_dict(self):
         hood_series = self.df['Neighbourhood'].unique()
         hood_series[hood_series == 'Mimico (includes Humber Bay Shores) (17)'] = 'Mimico includes Humber Bay Shores (17)'
         hood_list = hood_series.tolist()
-        hood_dict = convert_index_to_dict(hood_list)
+        self.hood_dict = convert_index_to_dict(hood_list)
+
+    def get_hood_dict(self, id):
         # hood_dict[97]
-        return hood_dict
+        return self.hood_dict[id]
 
     def get_intersection_name(self, val):
         filter = self.df['STREET_U'] == val

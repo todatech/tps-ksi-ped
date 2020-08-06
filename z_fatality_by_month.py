@@ -8,7 +8,7 @@ from tps import tps
 
 ds = tps.KSIData()
 
-fy = ds.df.groupby(ds.df.DATE.dt.year)['ACCLASS'].value_counts()
+fy = ds.df.groupby(ds.df.DATE.dt.month)['ACCLASS'].value_counts()
 
 trace1 = go.Bar(
     name="False",
