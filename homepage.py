@@ -12,68 +12,43 @@ body = dbc.Container(
             [
                 dbc.Col(
                     [
-                        html.Div(
-                            [
-                                html.H1("Advanced Methods of Data Analysis"),
-                            ], style={'textAlign':'center'}
+                        # html.Div(
+                        #     [
+                        #         html.H1("Prediction of the Level of Injury to Pedestrians in a possible vehicle collision"),
+                        #     ], style={'textAlign': 'center'}
 
-                        ),
-                        html.Br(),
+                        # ),
+                        # html.Br(),
                         html.Div(
                             [
-                                html.Img(src='/assets/school_logo.png'), 
-                            ], style={ 'textAlign': 'center', 'vertical-align': 'middle' }
+                                html.Img(src='/assets/school_logo.png'),
+                            ], style={'textAlign': 'center', 'vertical-align': 'middle'}
 
                         )
                     ]
-                ),                
+                ),
                 dbc.Col(
                     [
-                        html.A(
-                            html.H4("Lab 1 - Movies Recommender Systems"),
-                            href='/lab1'
-                        ),
-                        html.P(
-                            """\
-                            We are going to explore 4 different types of Recommender Systems. In this app, 
-                            we are going to show how system perform tasks to recommend movies titles based 
-                            on a series of users inputs, preferences, rating history using Big Data Analytics 
-                            tools and techinques.
-                            """
-                        ),
-                        html.Br(),
-                        html.A(
-                            html.H4("Lab 2 - Identifying Spam and Determining Sentiment in Text Messages"), 
-                            href='/lab2'
-                        ),
-                        html.P(
-                            """\
-                            In the first part of this lab, we will be using text mining techniques to determine 
-                            whether a message is a valid one or a spam. Next, we will then determine the sentiment
-                            within the messages itself. Both problems fall under classification, but we use two 
-                            different alogrithms to process them, 1.) SVM for spam identification and 2.) LSTM 
-                            neural networks to analyze sentiment. """
-                        ),
-                        html.Br(),
-                        html.A(
-                            html.H4("Lab 3 - Time Series Analysis on Keywords from Google Trends"), 
-                            href='/lab3'    
-                        ),
-                        html.P(
-                            """\
-                            In this lab, we are going to leverage on the real time data from the Google Trends API.
-                            First, we will show you the search frequency of the keywords or phase of your choice. Then,
-                            we will break down the time characteristics of this term into a graphical form that is easy
-                            to digest."""
-                        ),
-                        html.Br(),
-                        html.A(
-                            html.H4("Settings"), 
-                            href='/settings'    
-                        ),
-                        html.P(
-                            """\
-                            To load and unload some of the backend engines"""
+                        html.Div(
+                            [
+                                html.A(
+                                    html.H4("Pedestrian Injury Predictor"),
+                                    href='/pip'
+                                ),
+                                html.P(
+                                    """\
+                                    This app predicts the severity of injury of pedestrian for any given traffic collision.
+                                    By providing the system with 1. Apparent Drivers Action, 2) Drivers Condition, 3) 
+                                    Vehicle Manouever, 4) Age of the injured person, the Machine Learning Algorithm can
+                                    predict the severity of injury with an prediction accurary of 80% and above. The idea
+                                    is to help dispatch teams to quickly prioritize actions based on the given situations. 
+                                    
+                                    The purpose of this app is to demonstrate the possiblity of leveraging big data in 
+                                    this scenerio. However, this app is not fully tested for any real use cases. 
+                                    """
+                                ),
+                            ],
+                            style={'display': 'block', 'vertical-align': 'bottom'},
                         ),
                     ],
                     md=6,

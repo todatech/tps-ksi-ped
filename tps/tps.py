@@ -1,7 +1,19 @@
 import logging
-# import pickle
 import pandas as pd
 import numpy as np
+# import pickle
+
+# Cv
+from sklearn.model_selection import train_test_split
+
+# Classifier imports
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import LinearSVC
+from sklearn.metrics import accuracy_score
+# from sklearn.svm import SVC, LinearSVC, NuSVC
+# from sklearn.naive_bayes import GaussianNB, MultinomialNB, BernoulliNB
+# from sklearn.linear_model import LogisticRegression, SGDClassifier
+# from sklearn.metrics import accuracy_score, classification_report
 
 # import re
 import os.path
@@ -31,27 +43,27 @@ def convert_index_to_dict(string_list):
 # https://pandas.pydata.org/pandas-docs/stable/user_guide/categorical.html
 
 age_list_bagging = {
-    'unknown'  : 0,
-    '0 to 4'   : 1,
-    '5 to 9'   : 2,
-    '10 to 14' : 3,
-    '15 to 19' : 4,
-    '20 to 24' : 5,
-    '25 to 29' : 6,
-    '30 to 34' : 7,
-    '35 to 39' : 8,
-    '40 to 44' : 9,
-    '45 to 49' : 10,
-    '50 to 54' : 11,
-    '55 to 59' : 12,
-    '60 to 64' : 13,
-    '65 to 69' : 14,
-    '70 to 74' : 15,
-    '75 to 79' : 16,
-    '80 to 84' : 17,
-    '85 to 89' : 18,
-    '90 to 94' : 19,
-    'Over 95'  : 20
+    'unknown': 0,
+    '0 to 4': 1,
+    '5 to 9': 2,
+    '10 to 14': 3,
+    '15 to 19': 4,
+    '20 to 24': 5,
+    '25 to 29': 6,
+    '30 to 34': 7,
+    '35 to 39': 8,
+    '40 to 44': 9,
+    '45 to 49': 10,
+    '50 to 54': 11,
+    '55 to 59': 12,
+    '60 to 64': 13,
+    '65 to 69': 14,
+    '70 to 74': 15,
+    '75 to 79': 16,
+    '80 to 84': 17,
+    '85 to 89': 18,
+    '90 to 94': 19,
+    'Over 95': 20
 }
 
 
@@ -62,11 +74,20 @@ class KSIData:
     def __init__(self):
         self.df = None
         self.hood_dict = None
+        self.lsvc_accurary = 0
+        self.knn_accurary = 0
+        self.lsvc = None
+        self.knn = None
         self.age_list_bagging = age_list_bagging
         self.age_list_index = {value: key for (key, value) in age_list_bagging.items()}
         logger.info('loading csv data...')
         self.load_ksi_data()
         self.clean_ksi_data()
+        logger.info('building machine learning models...')
+        self.build_lsvc_model()
+        self.build_knn_model()
+        logger.info('lsvc model accurary: ' + str(self.lsvc_accurary))
+        logger.info('knn model accurary: ' + str(self.knn_accurary))
         logger.info('finish loading data')
 
     def load_ksi_data(self):
@@ -215,6 +236,36 @@ class KSIData:
         hood_list = hood_series.tolist()
         self.hood_dict = convert_index_to_dict(hood_list)
 
+    def build_lsvc_model(self):
+        features_cols = ['MANOEUVER_cc', 'DRIVACT_cc', 'DRIVCOND_cc', 'INVAGE_cc']
+        response = ['INJURY_cc']
+        X = self.df[features_cols]
+        y = self.df[response]
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=33)
+        self.lsvc = LinearSVC()
+        self.lsvc.fit(X_train, y_train)
+        y_pred = self.lsvc.predict(X_test)
+        # print("LSVC Accuracy :", accuracy_score(y_test, y_pred))
+        self.lsvc_accurary = accuracy_score(y_test, y_pred)
+
+    def get_lsvc_model_accurary(self):
+        return self.lsvc_accurary
+
+    def build_knn_model(self):
+        features_cols = ['MANOEUVER_cc', 'DRIVACT_cc', 'DRIVCOND_cc', 'INVAGE_cc']
+        response = ['INJURY_cc']
+        X = self.df[features_cols]
+        y = self.df[response]
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=33)
+        self.knn = KNeighborsClassifier(n_neighbors=20)
+        self.knn.fit(X_train, y_train)
+        y_pred = self.knn.predict(X_test)
+        # print("KNN Accuracy :", accuracy_score(y_test, y_pred))
+        self.knn_accurary = accuracy_score(y_test, y_pred)
+
+    def get_knn_model_accurary(self):
+        return self.knn_accurary
+
     def get_hood_dict(self, id):
         # hood_dict[97]
         return self.hood_dict[id]
@@ -231,6 +282,9 @@ class KSIData:
         # ## Neighbourhood Dictionary
         # #### Obtain a dictionary type for neighbourhood name
         # where you get key, value pair for neighbourhood {id: name}
+
+    def get_column_dictionary(self, col):
+        return dict(enumerate(self.df[col].cat.categories))
 
     def get_total_cases(self):
         return self.df['ACCNUM'].nunique()

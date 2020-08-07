@@ -1,6 +1,7 @@
 import dash
 import flask
 import dash_bootstrap_components as dbc
+from tps.tps import KSIData
 
 
 # ------------- General Startup -----------------------
@@ -9,6 +10,8 @@ server = flask.Flask(__name__)  # define flask app.server
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.UNITED], server=server)
 app.config.suppress_callback_exceptions = True
+
+ds = KSIData()
 
 # run following in command to load gunicorn server
 # gunicorn index:server -b :8050 -c gunicorn.py

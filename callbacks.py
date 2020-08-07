@@ -4,58 +4,97 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 
 # import time
+from app import app, ds
+
+# --- Callbacks
+# Option #1
+@app.callback(
+    Output('lab1app-display-value-1', 'children'),
+    [
+        Input('lab1app-dropdown-1', 'value'),
+        Input('lab1app-button-1', 'n_clicks'),
+    ],
+)
+def update_da(value, n_clicks):
+    return 'You\'ve entered "{}", Clicked: "{}"'.format(value, n_clicks)
+
+# Option #2
+@app.callback(
+    Output('lab1app-display-value-2', 'children'),
+    [
+        Input('lab1app-dropdown-2', 'value'),
+    ],
+)
+def update_dc(value):
+    #t = rec.get_movie_id_by_title(value)
+    # t = ''
+    return 'You\'ve entered "{}"'.format(value)
+
+# Option #3
+@app.callback(
+    Output('lab1app-display-value-3', 'children'),
+    [
+        Input('lab1app-dropdown-3', 'value'),
+    ]
+)
+def update_vm(value):
+    # df = rec.get_sample_df2()
+    # return 'You\'ve entered "{}", clicked: "{}"'.format(value, n_clicks)
+    return 'You\'ve entered "{}"'.format(value)
+
+# Option #4
+@app.callback(
+    Output('lab1app-display-value-4', 'children'),
+    [
+        Input('lab1app-dropdown-4', 'value'),
+    ],
+)
+def update_age(value):
+    # t = rec.get_movie_id_by_title(title)
+    # return 'You\'ve entered "{}", "{}", clicked: "{}"'.format(t, userid, n_clicks)
+    return 'You\'ve entered "{}"'.format(value)
+
+# Option #4
+@app.callback(
+    Output('lab1app-outcome', 'children'),
+    [
+        Input('lab1app-dropdown-1', 'value'),
+        Input('lab1app-dropdown-2', 'value'),
+        Input('lab1app-dropdown-3', 'value'),
+        Input('lab1app-dropdown-4', 'value'),
+        Input('lab1app-button-1', 'n_clicks'),
+
+    ],
+)
+def update_outcome(value1, value2, value3, value4, n_clicks):
+
+    # prediction has to follow this format
+    # features_cols = ['MANOEUVER_cc', 'DRIVACT_cc', 'DRIVCOND_cc', 'INVAGE_cc']
+    # that means order is value3, value1, value2, value4
+
+    val = [value3, value1, value2, value4]
+
+    for i in val:
+        if i is None:
+            return ''
+
+    lsvc_pred = ds.lsvc.predict([val])
+    knn_pred = ds.knn.predict([val])
+
+    injury_list = ds.get_column_dictionary('INJURY')
+
+    l1 = injury_list[lsvc_pred[0]]
+    k1 = injury_list[knn_pred[0]]    
+
+    stat = 'Value 3: "{}" 1: "{}" 2: "{}" 4: "{}", clicked: "{}"'.format(value3, value1, value2, value4, n_clicks)
+    # ans = 'Using LinearSVC prediction: {}. Using KNN Model prediction: {}'.format(lsvc_pred, knn_pred)
+    ans = 'Using LinearSVC prediction: {}. Using KNN Model prediction: {}'.format(l1, k1)
+
+    return ans + stat
+    # t = rec.get_movie_id_by_title(title)
+    # return 'You\'ve entered "{}", "{}", clicked: "{}"'.format(t, userid, n_clicks)
 
 
-
-# # --- Lab 1 Callbacks
-# @app.callback(
-#     Output('lab1app-tc-display-value', 'children'),
-#     [
-#         Input('lab1app-tc-dropdown', 'value'),
-#         Input('lab1app-tc-button', 'n_clicks'),
-#     ],
-# )
-# def update_tc(value, n_clicks):
-#     return 'You\'ve entered "{}", Clicked: "{}"'.format(value, n_clicks)
-
-# # Content Based
-# @app.callback(
-#     Output('lab1app-cb-display-value', 'children'),
-#     [
-#         Input('lab1app-cb-title', 'value'),
-#         Input('lab1app-cb-button', 'n_clicks'),
-#     ],
-# )
-# def update_cb(value, n_clicks):
-#     #t = rec.get_movie_id_by_title(value)
-#     t = ''
-#     return 'You\'ve entered "{}", Clicked: "{}"'.format(t, n_clicks)
-
-# # Collaborative Filtering
-# @app.callback(
-#     Output('lab1app-cf-display-value', 'children'),
-#     [
-#         Input('lab1app-cf-userid', 'value'),
-#         Input('lab1app-cf-button', 'n_clicks'),
-#     ]
-# )
-# def update_cf(value, n_clicks):
-#     #df = rec.get_sample_df2()
-#     return 'You\'ve entered "{}", clicked: "{}"'.format(value, n_clicks)
-
-# # Hybrid Filtering
-# @app.callback(
-#     Output('lab1app-hr-display-value', 'children'),
-#     [
-#         Input('lab1app-hr-title', 'value'),
-#         Input('lab1app-hr-userid', 'value'),
-#         Input('lab1app-hr-button', 'n_clicks'),
-
-#     ],
-# )
-# def update_hr(title, userid, n_clicks):
-#     t = rec.get_movie_id_by_title(title)
-#     return 'You\'ve entered "{}", "{}", clicked: "{}"'.format(t, userid, n_clicks)
 
 # # ----------------- Button Clicked and Table Processing ------------------
 # @app.callback(
@@ -126,27 +165,27 @@ from dash.dependencies import Input, Output
 
 #     return [table, status, rating_table, rating_status, ]
 
-# # For Debugging
-# @app.callback(
-#     [
-#         Output('lab1app-tc-display-value', 'style'),
-#         Output('lab1app-cb-display-value', 'style'),
-#         Output('lab1app-cf-display-value', 'style'),
-#         Output('lab1app-hr-display-value', 'style'),
-#     ],
-#     [
-#         Input('debug-show-hide', 'value'),
-#     ],
-# )
-# def show_hide_element(value):
-#     result = {}
+# For Debugging
+@app.callback(
+    [
+        Output('lab1app-display-value-1', 'style'),
+        Output('lab1app-display-value-2', 'style'),
+        Output('lab1app-display-value-3', 'style'),
+        Output('lab1app-display-value-4', 'style'),
+    ],
+    [
+        Input('debug-show-hide', 'value'),
+    ],
+)
+def show_hide_element(value):
+    result = {}
 
-#     if value == 'on':
-#         result = {'display': 'block'}
-#     if value == 'off':
-#         result = {'display': 'none'}
+    if value == 'on':
+        result = {'display': 'block'}
+    if value == 'off':
+        result = {'display': 'none'}
 
-#     return result, result, result, result,
+    return result, result, result, result,
 
 
 # # --- Lab 2 Callbacks

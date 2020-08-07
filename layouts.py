@@ -9,9 +9,9 @@ colors = {
 
 navbar = dbc.NavbarSimple(
     children=[
-        dbc.NavItem(dbc.NavLink("Link 1", href="/lab1")),
-        dbc.NavItem(dbc.NavLink("Link 2", href="/lab2")),
-        dbc.NavItem(dbc.NavLink("Link 3", href="/lab3")),
+        dbc.NavItem(dbc.NavLink("by students@York SCS", href="https://continue.yorku.ca/")),
+        dbc.NavItem(dbc.NavLink("in colloboration with Toronto Police Service Open Data", href="https://data.torontopolice.on.ca/")),
+        # dbc.NavItem(dbc.NavLink("Link 3", href="/lab3")),
 
         # dbc.DropdownMenu(
         #     nav=True,
@@ -27,7 +27,7 @@ navbar = dbc.NavbarSimple(
         #     ],
         # ),
     ],
-    brand="Dashboard App for KSI (Pedestrian) Dataset",
+    brand="Pedestrian Injury Predictor",
     brand_href="/",
     sticky="top",
 )

@@ -13,7 +13,7 @@ from app import app
 import callbacks
 
 import homepage
-# import lab1app
+import peip
 
 app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
@@ -23,8 +23,8 @@ app.layout = html.Div([
 
 @app.callback(Output('page-content', 'children'), [Input('url', 'pathname')])
 def display_page(pathname):
-    # if pathname == '/lab1':
-    #    return lab1app.App()
+    if pathname == '/pip':
+        return peip.App()
     # elif pathname == '/lab2':
     #    return lab2app.App()
     # elif pathname == '/lab3':
@@ -39,8 +39,8 @@ def display_page(pathname):
     #    return layout
     #  # elif pathname == '/time-series':
     #  #    return testapp.App()
-    # else:
-    return homepage.App()
+    else:
+        return homepage.App()
 
 
 if __name__ == "__main__":
