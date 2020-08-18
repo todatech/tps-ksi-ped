@@ -86,8 +86,9 @@ def update_outcome(value1, value2, value3, value4, n_clicks):
     l1 = injury_list[lsvc_pred[0]]
     k1 = injury_list[knn_pred[0]]    
 
-    stat = 'Value 3: "{}" 1: "{}" 2: "{}" 4: "{}", clicked: "{}"'.format(value3, value1, value2, value4, n_clicks)
+    # stat = 'Value 3: "{}" 1: "{}" 2: "{}" 4: "{}", clicked: "{}"'.format(value3, value1, value2, value4, n_clicks)
     # ans = 'Using LinearSVC prediction: {}. Using KNN Model prediction: {}'.format(lsvc_pred, knn_pred)
+    stat = ''
     ans = 'Using LinearSVC prediction: {}. Using KNN Model prediction: {}'.format(l1, k1)
 
     return ans + stat

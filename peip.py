@@ -145,6 +145,7 @@ def App():
                         ]
                     ),
                 ], className="m-4",
+                style={'display': 'none'}
             ),
             dbc.Row(
                 [
